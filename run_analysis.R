@@ -31,7 +31,7 @@
         print(paste("X Data loaded for dataset:",set))
 
         activity.set  <- read.table(activity.file)[, 1] 
-        data$label    <- factor(activity.set, levels=activity$level, labels=activity$label) 
+        data$label    <- factor(activity.set, levels=activity$serial, labels=activity$label) 
         print(paste("y_data/Activity loaded for dataset:",set))
 
         subject.set   <- read.table(subject.file)[, 1] 
@@ -46,15 +46,15 @@
      run.analysis <- function () { 
      
          # Read features.txt, filter '-(mean|std)[(]' pattern on name column and subset
-         feature.set <- read.table('features.txt', col.names = c('index', 'name')) 
-         features    <- subset(feature.set, grepl('-(mean|std)[(]', feature.set$name)) 
+         features    <- read.table('features.txt', col.names = c('index', 'name')) 
+         features    <- subset(features, grepl('-(mean|std)[(]', features$name)) 
  
          # Read activity_lable.txt and level the column with activity  
-         label.set <- read.table('activity_labels.txt', col.names = c('level', 'label'))
+         activities <- read.table('activity_labels.txt', col.names = c('serial', 'label'))
  
          # Read train and test data sets 
-         train.set <- load.dataset('train', features, label.set) 
-         test.set <- load.dataset('test', features, label.set) 
+         train.set <- load.dataset('train', features, activities) 
+         test.set <- load.dataset('test', features, activities) 
  
          # Merges the training and the test sets and write to a csv file 
          dataset <- rbind(train.set, test.set) 
